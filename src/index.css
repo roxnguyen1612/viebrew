@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Plus Jakarta Sans", var(--font-sans);
+  
+  --color-surface: #fbf9f8;
+  --color-surface-dim: #dbd9d9;
+  --color-surface-bright: #fbf9f8;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f5f3f3;
+  --color-surface-container: #efeded;
+  --color-surface-container-high: #eae8e7;
+  --color-surface-container-highest: #e4e2e2;
+  --color-on-surface: #1b1c1c;
+  --color-on-surface-variant: #434842;
+  --color-inverse-surface: #303030;
+  --color-inverse-on-surface: #f2f0f0;
+  --color-outline: #737972;
+  --color-outline-variant: #c3c8c0;
+  --color-surface-tint: #4d6450;
+  
+  --color-primary: #4d6450;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #b5cfb7;
+  --color-on-primary-container: #425946;
+  --color-inverse-primary: #b3cdb5;
+  
+  --color-secondary: #5f5e5a;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #e5e2dc;
+  --color-on-secondary-container: #656460;
+  
+  --color-tertiary: #6c5c4a;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #dac5af;
+  --color-on-tertiary-container: #615140;
+  
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+}
+
+body {
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
+  font-family: var(--font-sans);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Custom scroll bar hides */
+.scroll-hide::-webkit-scrollbar {
+  display: none;
+}
+.scroll-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
