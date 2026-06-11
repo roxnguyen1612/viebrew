@@ -54,8 +54,24 @@ export default function App() {
   const [scheduleDate, setScheduleDate] = useState<string>('Today, Jun 09');
   const [scheduleTime, setScheduleTime] = useState<string>('ASAP (15-20 mins)');
   const [isSchedulingModalOpen, setIsSchedulingModalOpen] = useState<boolean>(false);
+  const [isWelcomePopupOpen, setIsWelcomePopupOpen] = useState<boolean>(false);
+  const [hasShownWelcomePopup, setHasShownWelcomePopup] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (currentScreen === 'HOME' && !hasShownWelcomePopup) {
+      setIsWelcomePopupOpen(true);
+      setHasShownWelcomePopup(true);
+    }
+  }, [currentScreen, hasShownWelcomePopup]);
+
   const [tempScheduleDate, setTempScheduleDate] = useState<string>('Today, Jun 09');
   const [tempScheduleTime, setTempScheduleTime] = useState<string>('ASAP (15-20 mins)');
+
+  // Authentication Form States
+  const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
+  const [authEmail, setAuthEmail] = useState('');
+  const [authPassword, setAuthPassword] = useState('');
+  const [authName, setAuthName] = useState('');
 
   const openSchedulingModal = () => {
     setTempScheduleDate(scheduleDate);
@@ -279,9 +295,6 @@ export default function App() {
 
       {/* Main Responsive Layout shell */}
       <div className="w-full max-w-md bg-surface min-h-screen flex flex-col relative shadow-2xl border-x border-[#eae8e7] overflow-hidden">
-        
-        <AnimatePresence mode="wait">
-          
           {/* ==================== SCREEN 1: WELCOME SCREEN ==================== */}
           {currentScreen === 'WELCOME' && (
             <motion.div
@@ -302,18 +315,95 @@ export default function App() {
                   </p>
                 </div>
 
-                <div className="w-full space-y-3.5">
-                  <button 
-                    onClick={() => {
-                      showToast(`Welcome back, ${user.name}!`);
-                      setCurrentScreen('HOME');
-                    }}
-                    className="w-full py-3.5 bg-[#4d6450] text-[#ffffff] font-semibold rounded-xl shadow-md hover:brightness-105 active:scale-98 transition-all flex items-center justify-center gap-2"
-                  >
-                    <span>Sign Up / Login as Guest</span>
-                    <Sparkles className="w-4 h-4 text-white/80" />
-                  </button>
+                <div className="w-full space-y-5">
+                  {/* Input Fields */}
+                  <div className="space-y-3.5">
+                    {authMode === 'signup' && (
+                      <div className="text-left">
+                        <label className="block text-[11px] font-bold uppercase tracking-wider text-[#656460] mb-1.5 ml-1">Full Name</label>
+                        <input 
+                          type="text" 
+                          placeholder="Your Name (e.g. Alex Mercer)" 
+                          value={authName}
+                          onChange={(e) => setAuthName(e.target.value)}
+                          className="w-full px-4 py-3 bg-white border border-[#efeded] rounded-xl text-sm focus:outline-none focus:border-[#4d6450] focus:ring-1 focus:ring-[#4d6450] shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-all placeholder:text-[#c3c8c0] text-[#1b1c1c]"
+                        />
+                      </div>
+                    )}
+                    
+                    <div className="text-left">
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-[#656460] mb-1.5 ml-1">Email or Username</label>
+                      <input 
+                        type="text" 
+                        placeholder="alex@example.com" 
+                        value={authEmail}
+                        onChange={(e) => setAuthEmail(e.target.value)}
+                        className="w-full px-4 py-3 bg-white border border-[#efeded] rounded-xl text-sm focus:outline-none focus:border-[#4d6450] focus:ring-1 focus:ring-[#4d6450] shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-all placeholder:text-[#c3c8c0] text-[#1b1c1c]"
+                      />
+                    </div>
+
+                    <div className="text-left">
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-[#656460] mb-1.5 ml-1">Password</label>
+                      <input 
+                        type="password" 
+                        placeholder="••••••••" 
+                        value={authPassword}
+                        onChange={(e) => setAuthPassword(e.target.value)}
+                        className="w-full px-4 py-3 bg-white border border-[#efeded] rounded-xl text-sm focus:outline-none focus:border-[#4d6450] focus:ring-1 focus:ring-[#4d6450] shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-all placeholder:text-[#c3c8c0] text-[#1b1c1c]"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Primary Action Button */}
+                  <div className="space-y-3">
+                    <button 
+                      onClick={() => {
+                        let displayName = 'Alex';
+                        if (authMode === 'signup') {
+                          displayName = authName.trim() || 'Alex';
+                          setUser(prev => ({ ...prev, name: displayName }));
+                          showToast(`Account created! Welcome, ${displayName}!`);
+                        } else {
+                          if (authEmail.includes('@')) {
+                            displayName = authEmail.split('@')[0];
+                            displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
+                          } else if (authEmail.trim()) {
+                            displayName = authEmail.trim();
+                          }
+                          setUser(prev => ({ ...prev, name: displayName }));
+                          showToast(`Welcome back, ${displayName}!`);
+                        }
+                        setCurrentScreen('HOME');
+                      }}
+                      className="w-full py-3.5 bg-[#4d6450] text-[#ffffff] font-semibold rounded-xl shadow-md hover:brightness-105 active:scale-98 transition-all flex items-center justify-center gap-2"
+                    >
+                      <span>{authMode === 'login' ? 'Login' : 'Sign Up'}</span>
+                      <Sparkles className="w-4 h-4 text-white/80" />
+                    </button>
+
+                    {/* Toggle link underneath Login button */}
+                    <div className="text-center">
+                      <button
+                        type="button"
+                        onClick={() => setAuthMode(authMode === 'login' ? 'signup' : 'login')}
+                        className="text-xs text-[#4d6450] font-semibold hover:underline hover:opacity-90 active:scale-95 transition-all"
+                      >
+                        {authMode === 'login' 
+                          ? "Haven't had an account? Signup here" 
+                          : "Already have an account? Login here"
+                        }
+                      </button>
+                    </div>
+                  </div>
                   
+                  {/* Divider */}
+                  <div className="flex items-center justify-center gap-3 py-1">
+                    <div className="h-px bg-[#efeded] flex-1"></div>
+                    <span className="text-[10px] uppercase tracking-widest text-[#656460] font-bold">Or</span>
+                    <div className="h-px bg-[#efeded] flex-1"></div>
+                  </div>
+
+                  {/* Social Login Button */}
                   <button 
                     onClick={() => {
                       showToast("Connected using digital account");
@@ -347,6 +437,8 @@ export default function App() {
               exit={{ opacity: 0 }}
               className="flex-grow flex flex-col pb-24"
             >
+
+            <AnimatePresence mode="wait">
               {/* Header */}
               <header className="h-20 px-6 flex items-center justify-between border-b border-[#efeded] bg-[#fbf9f8]/80 backdrop-blur-md z-30 sticky top-0">
                 <div className="flex items-center gap-3">
@@ -522,7 +614,7 @@ export default function App() {
                 )}
               </div>
 
-
+            </AnimatePresence>
             </motion.div>
           )}
 
@@ -1123,7 +1215,7 @@ export default function App() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="flex-grow flex flex-col pt-12 pb-20 justify-between px-6"
+              className="flex-grow flex flex-col pt-12 pb-24 justify-between px-6 bg-[#fbf9f8]"
             >
               {/* Succession Header */}
               <header className="flex flex-col items-center text-center mt-4">
@@ -1136,27 +1228,27 @@ export default function App() {
                     initial={{ scale: 0.8 }}
                     animate={{ scale: [1, 1.05, 1] }}
                     transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
-                    className="relative bg-white w-20 h-20 rounded-full shadow-lg flex items-center justify-center text-primary border border-surface-container"
+                    className="relative bg-[#4d6450] w-20 h-20 rounded-2xl shadow-lg flex items-center justify-center text-white border border-[#4d6450]/20"
                   >
-                    <CheckCircle2 className="w-11 h-11 text-primary fill-primary/10" />
+                    <CheckCircle2 className="w-10 h-10 text-white" />
                   </motion.div>
                 </div>
 
-                <h1 className="font-display text-3xl font-black text-primary mt-1">Order Confirmed!</h1>
-                <p className="font-display italic text-secondary text-sm mt-1.5 leading-relaxed">
+                <h1 className="font-display text-3xl font-bold tracking-tight text-[#1b1c1c] mt-1" style={{ fontFamily: "'Helvetica Neue', Arial, sans-serif" }}>Order Confirmed!</h1>
+                <p className="text-[#434842] text-[15px] font-medium mt-1.5 leading-relaxed italic">
                   Your coffee is being brewed with love.
                 </p>
               </header>
 
               {/* Order Detail Canvas Container card */}
-              <div className="bg-white/80 rounded-3xl p-5 border border-surface-container shadow-sm mt-6">
+              <div className="bg-white rounded-[24px] p-6 shadow-[0_10px_30px_rgba(0,0,0,0.02)] border border-[#efeded] mt-6 text-left">
                 
-                <div className="flex justify-between items-center mb-5 pb-3 border-b border-surface-container">
+                <div className="flex justify-between items-center mb-5 pb-3.5 border-b border-[#efeded]">
                   <div>
-                    <h2 className="font-display text-base font-bold text-on-surface">Receipt Summary</h2>
-                    <p className="text-secondary text-xs">ID: {lastPlacedOrder.id}</p>
+                    <h2 className="font-bold text-[16px] text-[#1b1c1c]">Receipt Summary</h2>
+                    <p className="text-[#656460] text-xs">ID: {lastPlacedOrder.id}</p>
                   </div>
-                  <div className="bg-primary/5 text-primary text-xs px-3 py-1.5 rounded-full font-bold">
+                  <div className="bg-[#4d6450]/10 text-[#4d6450] text-[11px] px-3 py-1.5 rounded-full font-bold uppercase tracking-wider shrink-0">
                     Estimated: {lastPlacedOrder.estimatedTime} mins
                   </div>
                 </div>
@@ -1165,47 +1257,47 @@ export default function App() {
                 <div className="space-y-4 max-h-48 overflow-y-auto pr-1">
                   {lastPlacedOrder.items.map((item, idx) => (
                     <div key={idx} className="flex gap-3 items-center">
-                      <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0">
+                      <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0 bg-[#f5f3f3]">
                         <img src={item.image} className="w-full h-full object-cover" alt={item.name} referrerPolicy="no-referrer" />
                       </div>
                       <div className="flex-grow">
-                        <h4 className="font-display text-xs font-bold text-on-surface leading-snug line-clamp-1">{item.name}</h4>
-                        <p className="text-secondary text-[11px] leading-snug line-clamp-1">{item.description}</p>
+                        <h4 className="font-bold text-xs text-[#1b1c1c] leading-snug line-clamp-1">{item.name}</h4>
+                        <p className="text-[#656460] text-[11px] leading-snug line-clamp-1">{item.description}</p>
                       </div>
                       <div className="text-right shrink-0">
-                        <span className="text-xs font-bold font-display text-on-surface">${(item.price * item.quantity).toFixed(2)}</span>
-                        <p className="text-secondary text-[10px]">x{item.quantity}</p>
+                        <span className="text-xs font-bold text-[#1b1c1c]">${(item.price * item.quantity).toFixed(2)}</span>
+                        <p className="text-[#656460] text-[10px]">x{item.quantity}</p>
                       </div>
                     </div>
                   ))}
                 </div>
 
-                <div className="h-px bg-outline-variant/30 w-full my-4"></div>
+                <div className="h-px bg-[#efeded] w-full my-4"></div>
 
                 {/* Subtotals breakdown */}
-                <div className="space-y-2 mt-4 text-xs font-medium text-secondary">
+                <div className="space-y-2 mt-4 text-xs font-medium text-[#434842]">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
-                    <span className="text-on-surface">${lastPlacedOrder.subtotal.toFixed(2)}</span>
+                    <span className="text-[#1b1c1c] font-bold">${lastPlacedOrder.subtotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Service Fee</span>
-                    <span className="text-on-surface">${lastPlacedOrder.serviceFee.toFixed(2)}</span>
+                    <span className="text-[#1b1c1c] font-bold">${lastPlacedOrder.serviceFee.toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between font-display text-sm font-bold text-on-surface pt-2 border-t border-surface-container">
+                  <div className="flex justify-between font-bold text-base text-[#1b1c1c] pt-3.5 border-t border-[#efeded] mt-2">
                     <span>Total Paid</span>
-                    <span className="text-primary">${lastPlacedOrder.total.toFixed(2)}</span>
+                    <span className="text-[#4d6450]">${lastPlacedOrder.total.toFixed(2)}</span>
                   </div>
                 </div>
 
                 {/* Fulfillment spec */}
-                <div className="mt-5 p-3.5 bg-surface-container-low rounded-2xl flex items-start gap-3">
-                  <div className="bg-white p-1.5 rounded-full shadow-xs text-primary">
-                    <MapPin className="w-4 h-4" />
+                <div className="mt-5 p-4 bg-[#f5f3f3] rounded-xl flex items-center gap-3.5">
+                  <div className="w-9 h-9 bg-[#b5cfb7] rounded-lg flex items-center justify-center text-[#4d6450] shrink-0">
+                    <MapPin className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="text-[10px] text-secondary uppercase font-bold tracking-wider">Fulfillment Pickup</p>
-                    <p className="text-xs font-bold text-on-surface mt-0.5">VieBrew Central • 120 Coffee Way</p>
+                    <p className="text-[10px] text-[#656460] uppercase font-bold tracking-wider">Fulfillment Pickup</p>
+                    <p className="text-xs font-bold text-[#1b1c1c] mt-0.5">VieBrew Central • 120 Coffee Way</p>
                   </div>
                 </div>
               </div>
@@ -1215,16 +1307,16 @@ export default function App() {
                 <button 
                   onClick={() => {
                     setCurrentScreen('HOME');
-                    showToast('Let\'s customize another morning ritual! ☕');
+                    showToast("Let's customize another morning ritual! ☕");
                   }}
-                  className="w-full py-4 bg-primary text-on-primary font-display text-sm font-bold rounded-full shadow-md shadow-primary/15 hover:brightness-110 active:scale-98 transition-all flex items-center justify-center gap-2"
+                  className="w-full py-3.5 bg-[#4d6450] text-[#ffffff] rounded-xl font-bold text-[13px] hover:brightness-105 active:scale-[0.98] transition-all shadow-md flex items-center justify-center gap-2"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   <span>Return Menu Home</span>
                 </button>
                 <button 
                   onClick={() => showToast('📥 Receipt PDF receipt successfully saved to Downloads!')}
-                  className="w-full py-3.5 border-[1.5px] border-tertiary text-tertiary hover:bg-tertiary-container/10 font-display text-sm font-bold rounded-full flex items-center justify-center gap-2 active:scale-98 transition-all"
+                  className="w-full py-3.5 border border-[#c3c8c0] bg-white hover:bg-[#fbf9f8] text-[#434842] rounded-xl font-bold text-[13px] flex items-center justify-center gap-2 active:scale-[0.98] transition-all"
                 >
                   <Download className="w-4 h-4" />
                   <span>Download Receipt</span>
@@ -1375,7 +1467,6 @@ export default function App() {
             </motion.div>
           )}
 
-        </AnimatePresence>
         
         {/* ==================== DESKTOP GLOBAL FLOATING OVERVIEW FOR COFFEE CART ==================== */}
         {currentScreen === 'HOME' && cart.length > 0 && (
@@ -1566,6 +1657,55 @@ export default function App() {
                   </button>
                 </div>
               </motion.div>
+            </>
+          )}
+        </AnimatePresence>
+
+        {/* ==================== FRIENDLY WELCOME POP-UP NOTIFICATION ==================== */}
+        <AnimatePresence>
+          {isWelcomePopupOpen && currentScreen === 'HOME' && (
+            <>
+              {/* Backdrop overlay */}
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => {
+                  setIsWelcomePopupOpen(false);
+                }}
+                className="absolute inset-0 bg-[#1b1c1c]/40 backdrop-blur-xs z-50 pointer-events-auto"
+              />
+              
+              {/* Centered Popup Card */}
+              <div className="absolute inset-0 z-50 flex items-center justify-center p-6 pointer-events-none">
+                <motion.div 
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.9, opacity: 0 }}
+                  transition={{ type: 'spring', damping: 25, stiffness: 220 }}
+                  className="bg-white rounded-[32px] p-6 max-w-xs w-full shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-[#efeded] flex flex-col items-center text-center gap-5 pointer-events-auto"
+                >
+                  <div className="w-12 h-12 bg-[#4d6450]/15 rounded-full flex items-center justify-center text-[#4d6450]">
+                    <Coffee className="w-6 h-6" />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <h3 className="text-base font-bold text-[#1b1c1c] font-display">Friendly Note</h3>
+                    <p className="text-xs text-[#656460] leading-relaxed">
+                      We only do cash/ bank transfer. You just need to place the order and it's done~
+                    </p>
+                  </div>
+                  
+                  <button 
+                    onClick={() => {
+                      setIsWelcomePopupOpen(false);
+                    }}
+                    className="w-full bg-[#4d6450] text-[#ffffff] py-3 rounded-xl font-bold text-xs hover:brightness-105 active:scale-95 transition-all shadow-md"
+                  >
+                    Got it!
+                  </button>
+                </motion.div>
+              </div>
             </>
           )}
         </AnimatePresence>
