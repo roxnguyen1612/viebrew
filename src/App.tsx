@@ -16,8 +16,8 @@ export default function App() {
   // App Store / User Database State
   const [user, setUser] = useState({
     name: 'Alex',
-    points: 120,
-    maxPoints: 150,
+    points: 0,
+    maxPoints: 100,
     memberSince: '2023',
     avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCjGNMbsSwU52VKgfa2IfJlZVKam97vR6KdZtloTJ1Q-rSBca7hfQ-rUWvKebGty8YceupTy93H4D2IhLnyeHwbOqL_DNlpsrvqnEnmdyLG1bwmFScil0InoKu-PQeJcVrIVU0sMZRm8eF2XYV6_cG_0RcOA1K80p-UuuLtUGlqr6unx0srxGmlpLi9WzG7lQlWT-gPIFOsf9hoqJWnVb0I87aEZv3flaIzid9ACgNhQhlpN1vDsdDkt05a6XkV5fWgosCyDjMaUA'
   });
@@ -261,7 +261,7 @@ export default function App() {
     };
 
     // Update loyalty points
-    const earnedPoints = Math.round(subtotal * 2);
+    const earnedPoints = Math.round(subtotal);
     const nextPoints = user.points + earnedPoints;
     setUser(prev => {
       const nextVal = nextPoints >= prev.maxPoints ? (nextPoints % prev.maxPoints) : nextPoints;
@@ -1388,7 +1388,7 @@ export default function App() {
                       <Sparkles className="w-4.5 h-4.5" />
                     </div>
                     <p className="text-[12px] text-[#434842] leading-snug">
-                      Order drink to earn points. Only <strong>{user.maxPoints - user.points} more points</strong> to unlock a free coffee!
+                      1 point for every $1. Only <strong>{user.maxPoints - user.points} more points</strong> to unlock a $10 discount!
                     </p>
                   </div>
                 </section>
@@ -1428,7 +1428,7 @@ export default function App() {
 
                   {/* Settings Item Lists */}
                   <div className="space-y-2 pt-2">
-                    <button 
+                    {/* <button 
                       onClick={() => showToast('💳 Card integrations already loaded!')}
                       className="w-full flex items-center justify-between p-4 bg-white rounded-2xl shadow-xs hover:bg-surface-container-low transition-colors group border border-surface-container"
                     >
@@ -1452,7 +1452,7 @@ export default function App() {
                         <span className="font-display text-sm font-bold text-on-surface">Notification Settings</span>
                       </div>
                       <ChevronRight className="text-outline group-hover:translate-x-0.5 transition-transform w-4.5 h-4.5" />
-                    </button>
+                    </button> */}
 
                     <button 
                       onClick={() => {
