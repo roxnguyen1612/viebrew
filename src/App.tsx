@@ -311,7 +311,7 @@ export default function App() {
                   </div>
                   <h1 className="font-display text-4xl font-extrabold text-[#4d6450] tracking-tight">VieBrew</h1>
                   <p className="text-[#434842] text-sm px-4 leading-relaxed">
-                    Start your morning ritual with a touch of fresh pastoral energy.
+                    The Vietnamese coffee that is strong enough to knock you down.
                   </p>
                 </div>
 
@@ -389,7 +389,7 @@ export default function App() {
                         className="text-xs text-[#4d6450] font-semibold hover:underline hover:opacity-90 active:scale-95 transition-all"
                       >
                         {authMode === 'login' 
-                          ? "Haven't had an account? Signup here" 
+                          ? "Haven't had an account? Sign up here" 
                           : "Already have an account? Login here"
                         }
                       </button>
@@ -467,10 +467,10 @@ export default function App() {
                 {/* Greeting */}
                 <div className="mb-8 text-left">
                   <h1 className="text-[34px] font-bold leading-tight mb-2 tracking-tight text-[#1b1c1c]" style={{ fontFamily: "'Helvetica Neue', Arial, sans-serif" }}>
-                    Good morning, <span className="text-[#4d6450]">{user.name}</span>
+                    Good day, <span className="text-[#4d6450]">{user.name}</span>
                   </h1>
                   <p className="text-[#434842] text-[16px] leading-relaxed">
-                    The scent of freshly roasted beans is waiting for you.
+                    Vietnamese coffee is waiting for you.
                   </p>
                 </div>
 
@@ -1698,7 +1698,7 @@ export default function App() {
                   <div className="space-y-2">
                     <h3 className="text-base font-bold text-[#1b1c1c] font-display">Friendly Note</h3>
                     <p className="text-xs text-[#656460] leading-relaxed">
-                      We only do cash/ bank transfer. You just need to place the order and it's done~
+                      You just need to choose time/ address to place the order. I'm just too lazy to integrate online payment (and other features) hehe~
                     </p>
                   </div>
                   
