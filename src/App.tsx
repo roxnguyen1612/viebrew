@@ -50,7 +50,7 @@ export default function App() {
   // Address & Checkout settings
   const [selectedAddress, setSelectedAddress] = useState<string>(SAVED_ADDRESSES[0].address);
   const [isDelivery, setIsDelivery] = useState<boolean>(true);
-  const [pickupStore, setPickupStore] = useState<string>('VieBrew Central • 120 Coffee Way');
+  const [pickupStore, setPickupStore] = useState<string>('VieBrew Home • 7 Yates Wynd');
   const [scheduleDate, setScheduleDate] = useState<string>('Today, Jun 09');
   const [scheduleTime, setScheduleTime] = useState<string>('ASAP (15-20 mins)');
   const [isSchedulingModalOpen, setIsSchedulingModalOpen] = useState<boolean>(false);
@@ -99,7 +99,7 @@ export default function App() {
       total: 4.70,
       status: 'completed',
       estimatedTime: 0,
-      pickupLocation: 'VieBrew Central • 120 Coffee Way',
+      pickupLocation: 'VieBrew Home • 7 Yates Wynd',
       isDelivery: false
     }
   ]);
@@ -858,12 +858,12 @@ export default function App() {
                     <div className="flex-grow pr-4">
                       {isDelivery ? (
                         <>
-                          <h3 className="font-display text-base font-bold text-on-surface">Home Sweet Home</h3>
+                          <h3 className="font-display text-base font-bold text-on-surface">My Bewtifur Customer</h3>
                           <p className="text-secondary text-xs mt-0.5 line-clamp-1">{selectedAddress}</p>
                         </>
                       ) : (
                         <>
-                          <h3 className="font-display text-base font-bold text-on-surface">VieBrew Central</h3>
+                          <h3 className="font-display text-base font-bold text-on-surface">VieBrew Home</h3>
                           <p className="text-secondary text-xs mt-0.5 line-clamp-1">{pickupStore}</p>
                         </>
                       )}
@@ -1082,6 +1082,7 @@ export default function App() {
                     {/* GPS Selector Link option */}
                     <button 
                       onClick={() => {
+                        {/* Apply integration GG Map later */}
                         setSelectedAddress('Coordinates: 37.7749° N, 122.4194° W');
                         showToast('Retrieved location via browser GPS!');
                         setCurrentScreen('CART');
@@ -1098,7 +1099,7 @@ export default function App() {
                     </button>
 
                     {/* Saved Addresses Lists */}
-                    <div>
+                    {/* <div>
                       <h2 className="font-display text-sm font-bold text-on-surface mb-3 uppercase tracking-wider text-secondary">Saved Addresses</h2>
                       <div className="space-y-3">
                         {SAVED_ADDRESSES.map((item) => (
@@ -1124,7 +1125,7 @@ export default function App() {
                           </div>
                         ))}
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 ) : (
                   /* ==================== PICK-UP MODE SUB-SECTION ==================== */
@@ -1150,8 +1151,8 @@ export default function App() {
                       <div className="p-5">
                         <div className="flex justify-between items-start mb-4">
                           <div>
-                            <h3 className="font-display text-lg font-bold text-on-surface">VieBrew Central</h3>
-                            <p className="text-secondary text-xs mt-0.5">120 Coffee Way, Downtown Sector</p>
+                            <h3 className="font-display text-lg font-bold text-on-surface">VieBrew Home</h3>
+                            <p className="text-secondary text-xs mt-0.5">7 Yates Wynd, Doncaster East, VIC 3109</p>
                           </div>
                           <div className="px-3 py-1 bg-primary-container/45 text-on-primary-container rounded-full text-[10px] font-bold font-display uppercase tracking-wide shrink-0">
                             0.8 mi away
@@ -1162,13 +1163,18 @@ export default function App() {
                           <Clock className="text-tertiary w-5 h-5 shrink-0" />
                           <div>
                             <span className="text-[10px] uppercase font-bold text-secondary">Store Hours</span>
-                            <p className="text-xs font-bold text-on-surface">7:00 AM - 8:00 PM Daily</p>
+                            <p className="text-xs font-bold text-on-surface">Mon 8:00 AM - 8:00 PM</p>
+                            <p className="text-xs font-bold text-on-surface">Wed 8:00 AM - 8:00 PM</p>
+                            <p className="text-xs font-bold text-on-surface">Fri 8:00 AM - 8:00 PM</p>
+                            <p className="text-xs font-bold text-on-surface">Sat 8:00 AM - 8:00 PM</p>
+                            <p className="text-xs font-bold text-on-surface">Sun 8:00 AM - 8:00 PM</p>
+                            
                           </div>
                         </div>
 
                         <button 
                           onClick={() => {
-                            setPickupStore('VieBrew Central • 120 Coffee Way');
+                            setPickupStore('VieBrew Home • 7 Yates Wynd');
                             showToast('Pickup store selection verified!');
                             setCurrentScreen('CART');
                           }}
@@ -1180,7 +1186,7 @@ export default function App() {
                     </div>
 
                     {/* Nearby Stores lists */}
-                    <div>
+                    {/* <div>
                       <h2 className="font-display text-sm font-bold text-on-surface mb-3 uppercase tracking-wider text-secondary">Other Nearby Stores</h2>
                       <div className="flex items-center gap-4 p-4 bg-white rounded-2xl shadow-xs border border-surface-container cursor-pointer hover:border-primary/20 transition-all">
                         <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary shrink-0">
@@ -1201,7 +1207,7 @@ export default function App() {
                           Select
                         </button>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 )}
               </div>
@@ -1297,7 +1303,7 @@ export default function App() {
                   </div>
                   <div>
                     <p className="text-[10px] text-[#656460] uppercase font-bold tracking-wider">Fulfillment Pickup</p>
-                    <p className="text-xs font-bold text-[#1b1c1c] mt-0.5">VieBrew Central • 120 Coffee Way</p>
+                    <p className="text-xs font-bold text-[#1b1c1c] mt-0.5">VieBrew Home • 7 Yates Wynd</p>
                   </div>
                 </div>
               </div>
